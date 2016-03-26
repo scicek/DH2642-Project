@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="Main.Views.TimeAllocationControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:Main.Views.Converters"
+             Name="TimeAllocationCtrl"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <converters:ActivityTypeToBackgroundColorConverter x:Key="ActivityTypeToBackgroundColorConverter"/>
+        <converters:PercentageOfElementHeightToHeightConverter x:Key="PercentageOfElementHeightToHeightConverter"/>
+    </UserControl.Resources>
+    
+    <Grid VerticalAlignment="Bottom">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.15*"/>
+            <ColumnDefinition Width="0.7*"/>
+            <ColumnDefinition Width="0.15*"/>
+        </Grid.ColumnDefinitions>
+        
+        <ItemsControl x:Name="ActivitiesItemControl" Grid.Column="1" ItemsSource="{Binding ElementName=TimeAllocationCtrl, Path=Activities}" VerticalAlignment="Bottom">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid Background="{Binding Key, Converter={StaticResource ActivityTypeToBackgroundColorConverter}}" VerticalAlignment="Bottom">
+                        <Grid.Height>
+                            <MultiBinding Converter="{StaticResource PercentageOfElementHeightToHeightConverter}">
+                                <Binding Path="Value"/>
+                                <Binding ElementName="TimeAllocationCtrl" Path="Height"/>
+                            </MultiBinding>
+                        </Grid.Height>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        
+        <Border Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="Red" BorderThickness="0, 2, 0, 0" VerticalAlignment="Bottom">
+            <Border.Height>
+                <MultiBinding Converter="{StaticResource PercentageOfElementHeightToHeightConverter}">
+                    <Binding ElementName="TimeAllocationCtrl" Path="RequiredBreakPercentage"/>
+                    <Binding ElementName="TimeAllocationCtrl" Path="Height"/>
+                </MultiBinding>
+            </Border.Height>
+            
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=TimeAllocationCtrl, Path=Activities.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+        </Border>        
+    </Grid>
+</UserControl>

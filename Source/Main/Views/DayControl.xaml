@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="Main.Views.DayControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:views="clr-namespace:Main.Views"
+             x:Name="DayCtrl"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Style x:Key="WhiteLabel" TargetType="Label">
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style x:Key="WhiteTextBlock" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+    </UserControl.Resources>
+    <DockPanel Margin="15">
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.7*"/>
+                <ColumnDefinition Width="0.3*"/>
+            </Grid.ColumnDefinitions>
+            
+            <StackPanel Grid.Column="0" Orientation="Vertical">
+                <TextBlock Style="{StaticResource WhiteTextBlock}">
+                    <Run Text="Date: "/>
+                    <Run Text="{Binding ElementName=DayCtrl, Path=Day.Date, Mode=OneWay}"/>
+                </TextBlock>
+                
+                <DockPanel Dock="Top">
+                    <TextBlock Text="Start time: " Style="{StaticResource WhiteTextBlock}"/>
+                    <TextBox x:Name="StartTimeTextBox" Text="{Binding ElementName=DayCtrl, Path=Day.StartTime, Mode=OneWay}" BorderBrush="#7F7F7F" BorderThickness="2" PreviewKeyDown="OnPreviewKeyDown"/>
+                </DockPanel>
+
+                <TextBlock Style="{StaticResource WhiteTextBlock}" DockPanel.Dock="Top" Margin="0, 0, 0, 10">
+                    <Run Text="End time: "/><Run Text="{Binding ElementName=DayCtrl, Path=Day.EndTime, Mode=OneWay}"/><LineBreak/>
+                    <Run Text="Total length: "/><Run Text="{Binding ElementName=DayCtrl, Path=Day.TotalLength, Mode=OneWay}"/>
+                </TextBlock>
+            </StackPanel>
+
+            <views:TimeAllocationControl Grid.Column="1" Background="Transparent" Activities="{Binding ElementName=DayCtrl, Path=Day.TimeAllocations}" RequiredBreakPercentage="0.3" MinWidth="70" Height="70" VerticalAlignment="Bottom" Margin="10, 0, 0, 10"/>
+        </Grid>
+
+        <views:ActivityListControl Activities="{Binding ElementName=DayCtrl, Path=Day.Activities, Mode=OneWay}" Added="ActivityListControl_OnAdded" Removed="ActivityListControl_OnRemoved"/>    
+    </DockPanel>
+</UserControl>

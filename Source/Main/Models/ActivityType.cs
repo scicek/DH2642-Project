@@ -1,4 +1,4 @@
-﻿namespace Main.Views
+﻿namespace Main.Models
 {
     public enum ActivityType
     {

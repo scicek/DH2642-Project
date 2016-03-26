@@ -4,14 +4,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:viewModels="clr-namespace:Main.ViewModels"
-        Title="Meeting Agenda Builder" Height="450" Width="525" 
+        xmlns:views="clr-namespace:Main.Views"
+        Title="Meeting Agenda Builder" Height="560" Width="700" 
         x:Name="Main"
+        SizeToContent="Width"
+        AllowDrop="True"
         ResizeMode="CanMinimize"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=viewModels:MainViewModel, IsDesignTimeCreatable=True}">
     <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-
         <Style x:Key="GreenButton" TargetType="Button">
             <Setter Property="Background" Value="#9BBB59"/>
             <Setter Property="BorderBrush" Value="#71893F"/>
@@ -25,57 +26,43 @@
             <Setter Property="BorderThickness" Value="3"/>
             <Setter Property="Foreground" Value="White"/>
         </Style>
-
-        <Style x:Key="WhiteLabel" TargetType="Label">
-            <Setter Property="Foreground" Value="White"/>
-        </Style>
-
-        <Style x:Key="WhiteTextBlock" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="White"/>
-        </Style>
     </Window.Resources>
     <Grid x:Name="MainGrid" Background="#1E1E1E">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="0.4*" MinWidth="200"/>
+                <ColumnDefinition Width="0.4*" MinWidth="200"/>
+                <ColumnDefinition Width="0.2*"/>
             </Grid.ColumnDefinitions>
 
             <DockPanel Grid.Column="0" Margin="15">
-                <Button DockPanel.Dock="Top" x:Name="AddActivityButton" Content="+ Add Activity" Style="{StaticResource GreenButton}" Margin="0, 0, 0, 10" Click="AddActivity"/>
-                <Grid>
-                    <ItemsControl >
-                    </ItemsControl>
-                    <Rectangle Stroke="White" StrokeThickness="2" StrokeDashArray="4 4" RadiusX="5" RadiusY="5" SnapsToDevicePixels="True"/>
-                </Grid>
+                <Button DockPanel.Dock="Top" x:Name="AddActivityButton" Content="+ Add Activity" Style="{StaticResource GreenButton}" Margin="0, 0, 0, 10" Click="AddNewActivity" FontWeight="Bold"/>
+                <views:ActivityListControl Activities="{Binding Activities}" Added="OnActivityAdded" Removed="OnActivityRemoved"/>
             </DockPanel>
 
-            <DockPanel Grid.Column="1" Margin="15">
-                <DockPanel Dock="Top">
-                    <TextBlock Text="Start time: " Style="{StaticResource WhiteTextBlock}"/>
-                    <TextBox/>
-                </DockPanel>
-                
-                <TextBlock Style="{StaticResource WhiteTextBlock}" DockPanel.Dock="Top" Margin="0, 0, 0, 10">
-                    <Run Text="End time: "/><Run Text="08:00"/><LineBreak/>
-                    <Run Text="Total length: "/><Run Text="0"/><Run Text=" min"/>
-                </TextBlock>
-                
-                <Grid>
-                    <ItemsControl >
-                    </ItemsControl>
-                    <Rectangle Stroke="White" StrokeThickness="2" StrokeDashArray="4 4" RadiusX="5" RadiusY="5" SnapsToDevicePixels="True"/>
-                </Grid>
-            </DockPanel>
+            <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Days}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <views:DayControl Day="{Binding }" DayChanged="OnDayChanged"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
         
-            <Button Grid.Column="2" Content="+ Add a day" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource GreenButton}" Padding="25"></Button>
+            <Button Grid.Column="2" Content="+ Add a day" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource GreenButton}" Padding="25" FontWeight="Bold" Click="OnAddDay" Margin="0, 0, 10, 0"/>
         </Grid>
 
-        <Grid x:Name="AddActivityPopup" Visibility="{Binding IsAddingActivity, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Grid x:Name="AddActivityPopup" Visibility="Hidden">
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.2*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="0.8*"/>
                 <RowDefinition Height="0.2*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -85,39 +72,43 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.ColumnSpan="3" Grid.RowSpan="3" Background="Black" Opacity="0.9"/>
-            <Grid Grid.Row="1" Grid.Column="1">
+            <Grid Grid.Row="1" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                 <StackPanel>
-                    <Border Background="#1E1E1E" BorderBrush="White" BorderThickness="2" Margin="0, -3, 0, 0" CornerRadius="8">
-                        <Grid Margin="20">
+                    <Border Background="#1E1E1E" BorderBrush="White" BorderThickness="2" CornerRadius="8">
+                        <Grid Margin="10">
                             <StackPanel Orientation="Vertical">
                                 <Label Content="Name" Foreground="White"/>
-                                <TextBox/>
+                                <TextBox Text="{Binding ActivityName}"/>
 
-                                <Label Content="Length" Foreground="White"/>
+                                <Label Content="Length" Foreground="White" Margin="0, 10, 0, 0"/>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBox Grid.Column="0"/>
-                                    <Label Grid.Column="1" Content="min" Foreground="White"/>
+                                    <TextBox Grid.Column="0" Text="{Binding ActivityLength}"/>
                                 </Grid>
 
-                                <ComboBox ItemsSource="{Binding Path=ActivityTypes}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding Path=SelectedActivityType, Mode=TwoWay}" Margin="0, 10, 0, 0"/>
+                                <Label Content="Type" Foreground="White" Margin="0, 10, 0, -5"/>
+                                <ComboBox ItemsSource="{Binding Path=ActivityTypes}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding Path=ActivityType, Mode=TwoWay}" Margin="0, 10, 0, 0"/>
 
-                                <Label Content="Description" Foreground="White"/>
-                                <TextBlock Height="44" Background="White"/>
+                                <Label Content="Description" Foreground="White" Margin="0, 10, 0, 0"/>
+                                <TextBox Height="44" Background="White" Text="{Binding ActivityDescription}" AcceptsReturn="True" MaxWidth="230"/>
 
                                 <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0" HorizontalAlignment="Center">
                                     <Button Content="Cancel" Style="{StaticResource RedButton}" Padding="5" Click="OnAddActivityCancel"/>
                                     <Button Content="Save" Style="{StaticResource GreenButton}" Padding="5" Margin="5, 0" Click="OnAddActivitySave"/>
                                 </StackPanel>
+                                
+                                <Label x:Name="ErrorText" Content="Invalid data!" Foreground="Red" HorizontalAlignment="Center" Margin="0, 10, 0, 0" Visibility="Hidden"/>
                             </StackPanel>
                         </Grid>
                     </Border>
                 </StackPanel>
             </Grid>
-        </Grid>        
+        </Grid>
+
+        <Grid x:Name="AdornerLayer"/>
     </Grid>
 </Window>

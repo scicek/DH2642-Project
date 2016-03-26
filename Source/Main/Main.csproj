@@ -36,6 +36,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -53,9 +55,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Activity.cs" />
+    <Compile Include="Models\ActivityType.cs" />
+    <Compile Include="Models\Date.cs" />
+    <Compile Include="Models\Day.cs" />
+    <Compile Include="Models\Extensions\DateExtensions.cs" />
+    <Compile Include="Models\Extensions\EventExtensions.cs" />
+    <Compile Include="Models\MainModel.cs" />
+    <Compile Include="Models\NotifyBase.cs" />
+    <Compile Include="Models\ParkingLot.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="Views\ActivityType.cs" />
+    <Compile Include="Views\ActivityControl.xaml.cs">
+      <DependentUpon>ActivityControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ActivityListControl.xaml.cs">
+      <DependentUpon>ActivityListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Converters\ActivityTypeToBackgroundColorConverter.cs" />
+    <Compile Include="Views\Converters\PercentageOfElementHeightToHeightConverter.cs" />
+    <Compile Include="Views\DayControl.xaml.cs">
+      <DependentUpon>DayControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DragAdorner.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -63,9 +85,28 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Views\TimeAllocationControl.xaml.cs">
+      <DependentUpon>TimeAllocationControl.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Views\ActivityControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ActivityListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DayControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\TimeAllocationControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -95,9 +136,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
