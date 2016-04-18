@@ -2,6 +2,7 @@
 {
     using System;
     using System.Windows;
+    using Controls;
     using Models;
     using ViewModels;
 
@@ -20,29 +21,10 @@
             DragOver += OnDragOver;
         }
 
+        #region The following methods are purely piping, binding events from the view to the viewmodel could be done through commands but becomes tedious and is quite ugly.
         private void AddNewActivity(object sender, RoutedEventArgs e)
         {
-            AddActivityPopup.Visibility = Visibility.Visible;
-        }
-
-        private void OnAddActivityCancel(object sender, RoutedEventArgs e)
-        {
-            _mainViewModel.CancelAddingActivity();
-            AddActivityPopup.Visibility = Visibility.Hidden;
-            ErrorText.Visibility = Visibility.Hidden;
-        }
-
-        private void OnAddActivitySave(object sender, RoutedEventArgs e)
-        {
-            if (_mainViewModel.SaveActivity())
-            {
-                AddActivityPopup.Visibility = Visibility.Hidden;
-                ErrorText.Visibility = Visibility.Hidden;
-            }
-            else
-            {
-                ErrorText.Visibility = Visibility.Visible;
-            }
+            _mainViewModel.DisplayEditActivityDialog();
         }
 
         private void OnAddDay(object sender, RoutedEventArgs e)
@@ -50,25 +32,40 @@
             _mainViewModel.AddDay();
         }
 
-        private void OnActivityAdded(object sender, Activity e)
+        private void OnParkedActivityAdded(object sender, Activity e)
         {
-            _mainViewModel.AddActivity(e);
+            _mainViewModel.AddParkedActivity(e);
         }
 
-        private void OnActivityRemoved(object sender, Activity e)
+        private void OnParkedActivityRemoved(object sender, Activity e)
         {
-            _mainViewModel.RemoveActivity(e);
+            _mainViewModel.RemoveParkedActivity(e);
         }
+        
+        private void OnSaveActivity(object sender, Activity activity)
+        {
+            _mainViewModel.SaveActivity(activity);
+        }
+
+        private void OnCancelActivity(object sender, EventArgs e)
+        {
+            _mainViewModel.HideEditActivityDialog();
+        }
+
+        private void OnEditActivity(object sender, RoutedEventArgs e)
+        {
+            var activityControl = e.OriginalSource as ActivityControl;
+            if (activityControl == null)
+                return;
+
+            _mainViewModel.DisplayEditActivityDialog(activityControl.Activity, false);
+        }
+        #endregion
 
         private void OnDragOver(object sender, DragEventArgs args)
         {
             args.Effects = DragDropEffects.None;
             args.Handled = true;
-        }
-
-        private void OnDayChanged(object sender, Day e)
-        {
-            _mainViewModel.UpdateDay(e);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Main.Views
+﻿namespace Main.Views.Controls
 {
     using System;
     using System.Collections.Generic;
@@ -16,8 +16,10 @@
     {
         public static readonly DependencyProperty ActivityProperty = DependencyProperty.Register("Activity", typeof(Activity), typeof(ActivityControl), new PropertyMetadata(null));
         public static readonly RoutedEvent MovedEvent = EventManager.RegisterRoutedEvent("Moved", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(ActivityControl));
-        private Point _dragStartPosition;
+        public static readonly RoutedEvent EditEvent = EventManager.RegisterRoutedEvent("Edit", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(ActivityControl));
+
         private bool _dragging;
+        private Point _dragStartPosition;
         private DragAdorner _dragAdorner;
 
         public ActivityControl()
@@ -36,6 +38,12 @@
         {
             add { AddHandler(MovedEvent, value); }
             remove { RemoveHandler(MovedEvent, value); }
+        }
+        
+        public event RoutedEventHandler Edit
+        {
+            add { AddHandler(EditEvent, value); }
+            remove { RemoveHandler(EditEvent, value); }
         }
 
         public Activity Activity
@@ -104,6 +112,11 @@
             }
 
             return control as ActivityListControl;
+        }
+
+        private void UIElement_OnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            RaiseEvent(new RoutedEventArgs(EditEvent, this));
         }
     }
 }

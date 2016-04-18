@@ -1,23 +1,34 @@
-﻿<UserControl x:Class="Main.Views.DayControl"
+﻿<UserControl x:Class="Main.Views.Controls.DayControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:views="clr-namespace:Main.Views"
+             xmlns:controls="clr-namespace:Main.Views.Controls"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              x:Name="DayCtrl"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <Style x:Key="WhiteLabel" TargetType="Label">
-            <Setter Property="Foreground" Value="White"/>
-        </Style>
-
         <Style x:Key="WhiteTextBlock" TargetType="TextBlock">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="Bold"/>
         </Style>
     </UserControl.Resources>
     <DockPanel Margin="15">
+        <Border Background="Red" BorderBrush="White" BorderThickness="0, 2, 0, 2" DockPanel.Dock="Top" Margin="0, 0, 0, 10">
+            <TextBlock x:Name="HolidayTextBlock" Text="{Binding ElementName=DayCtrl, Path=Holiday}" HorizontalAlignment="Center" Style="{StaticResource WhiteTextBlock}"/>
+            
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=HolidayTextBlock, Path=Text}" Value="{x:Static system:String.Empty}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+        </Border>
+        
         <Grid DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.7*"/>
@@ -32,7 +43,7 @@
                 
                 <DockPanel Dock="Top">
                     <TextBlock Text="Start time: " Style="{StaticResource WhiteTextBlock}"/>
-                    <TextBox x:Name="StartTimeTextBox" Text="{Binding ElementName=DayCtrl, Path=Day.StartTime, Mode=OneWay}" BorderBrush="#7F7F7F" BorderThickness="2" PreviewKeyDown="OnPreviewKeyDown"/>
+                    <TextBox x:Name="StartTimeTextBox" Text="{Binding ElementName=DayCtrl, Path=Day.BeginTime}" BorderBrush="#7F7F7F" BorderThickness="2" PreviewKeyDown="OnPreviewKeyDown"/>
                 </DockPanel>
 
                 <TextBlock Style="{StaticResource WhiteTextBlock}" DockPanel.Dock="Top" Margin="0, 0, 0, 10">
@@ -41,9 +52,9 @@
                 </TextBlock>
             </StackPanel>
 
-            <views:TimeAllocationControl Grid.Column="1" Background="Transparent" Activities="{Binding ElementName=DayCtrl, Path=Day.TimeAllocations}" RequiredBreakPercentage="0.3" MinWidth="70" Height="70" VerticalAlignment="Bottom" Margin="10, 0, 0, 10"/>
+            <controls:TimeAllocationControl Grid.Column="1" Background="Transparent" ActivityAllocations="{Binding ElementName=DayCtrl, Path=Day.TimeAllocations}" RequiredBreakPercentage="0.3" MinWidth="70" Height="70" VerticalAlignment="Bottom" Margin="10, 0, 0, 10"/>
         </Grid>
-
-        <views:ActivityListControl Activities="{Binding ElementName=DayCtrl, Path=Day.Activities, Mode=OneWay}" Added="ActivityListControl_OnAdded" Removed="ActivityListControl_OnRemoved"/>    
+       
+        <controls:ActivityListControl x:Name="ActivityListControl" DockPanel.Dock="Bottom" Activities="{Binding ElementName=DayCtrl, Path=Day.AllActivities}" Added="ActivityListControl_OnAdded" Removed="ActivityListControl_OnRemoved"/>    
     </DockPanel>
 </UserControl>

@@ -34,9 +34,34 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FireSharp">
+      <HintPath>..\..\packages\FireSharp.2.0.3\lib\portable-net45+sl5+wp8+win8\FireSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks">
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions">
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop">
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Extensions">
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.28\lib\net45\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives">
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.28\lib\net45\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -56,28 +81,35 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\Activity.cs" />
+    <Compile Include="Models\ActivityList.cs" />
     <Compile Include="Models\ActivityType.cs" />
     <Compile Include="Models\Date.cs" />
     <Compile Include="Models\Day.cs" />
     <Compile Include="Models\Extensions\DateExtensions.cs" />
     <Compile Include="Models\Extensions\EventExtensions.cs" />
-    <Compile Include="Models\MainModel.cs" />
+    <Compile Include="Models\DayContainer.cs" />
     <Compile Include="Models\NotifyBase.cs" />
-    <Compile Include="Models\ParkingLot.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Utilities.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="Views\ActivityControl.xaml.cs">
+    <Compile Include="Views\Controls\ActivityControl.xaml.cs">
       <DependentUpon>ActivityControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ActivityListControl.xaml.cs">
+    <Compile Include="Views\Controls\ActivityInformationControl.xaml.cs">
+      <DependentUpon>ActivityInformationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\ActivityListControl.xaml.cs">
       <DependentUpon>ActivityListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\DayControl.xaml.cs">
+      <DependentUpon>DayControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\DragAdorner.cs" />
+    <Compile Include="Views\Controls\TimeAllocationControl.xaml.cs">
+      <DependentUpon>TimeAllocationControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Converters\ActivityTypeToBackgroundColorConverter.cs" />
     <Compile Include="Views\Converters\PercentageOfElementHeightToHeightConverter.cs" />
-    <Compile Include="Views\DayControl.xaml.cs">
-      <DependentUpon>DayControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DragAdorner.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -85,26 +117,31 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\TimeAllocationControl.xaml.cs">
-      <DependentUpon>TimeAllocationControl.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Views\ActivityControl.xaml">
+    <Page Include="Views\Controls\ActivityControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\ActivityInformationControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ActivityListControl.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Views\Controls\ActivityListControl.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\DayControl.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Views\Controls\DayControl.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\TimeAllocationControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\TimeAllocationControl.xaml">
+    <Page Include="Views\Styles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -127,6 +164,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -136,8 +174,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <SplashScreen Include="Resources\SplashScreen.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

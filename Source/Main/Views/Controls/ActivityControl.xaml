@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Main.Views.ActivityControl"
+﻿<UserControl x:Class="Main.Views.Controls.ActivityControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -10,9 +10,18 @@
     <UserControl.Resources>
         <converters:ActivityTypeToBackgroundColorConverter x:Key="ActivityTypeToBackgroundColorConverter"/>
     </UserControl.Resources>
-    <DockPanel>
+    <DockPanel Background="Transparent" PreviewMouseLeftButtonUp="UIElement_OnPreviewMouseLeftButtonUp">
         <TextBlock DockPanel.Dock="Left" Foreground="White" Margin="10" FontWeight="Bold">
-            <Run Text="{Binding ElementName=ActivityCtrl, Path=Activity.Length}"/>
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Text" Value="{Binding ElementName=ActivityCtrl, Path=Activity.StartTime}"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=ActivityCtrl, Path=Activity.StartTime}" Value="{x:Null}">
+                            <Setter Property="Text" Value="{Binding ElementName=ActivityCtrl, Path=Activity.Length}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
         </TextBlock>
         
         <Grid DockPanel.Dock="Left">

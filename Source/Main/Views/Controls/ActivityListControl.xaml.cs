@@ -1,4 +1,4 @@
-﻿namespace Main.Views
+﻿namespace Main.Views.Controls
 {
     using System;
     using System.Collections.Generic;
@@ -12,22 +12,19 @@
     /// </summary>
     public partial class ActivityListControl : UserControl
     {
-        public static readonly DependencyProperty ActivitiesProperty = DependencyProperty.Register("Activities", typeof(ICollection<Activity>), typeof(ActivityListControl), new PropertyMetadata(null));
+        public static readonly DependencyProperty ActivitiesProperty = DependencyProperty.Register("Activities", typeof(IEnumerable<Activity>), typeof(ActivityListControl), new PropertyMetadata(null));
 
         public ActivityListControl()
         {
             InitializeComponent();
-            AllowDrop = true;
-            Drop += OnDrop;
-            DragOver += OnDragOver;
         }
 
         public event EventHandler<Activity> Added;
         public event EventHandler<Activity> Removed;
 
-        public ICollection<Activity> Activities
+        public IEnumerable<Activity> Activities
         {
-            get { return (ICollection<Activity>)GetValue(ActivitiesProperty); }
+            get { return (IEnumerable<Activity>)GetValue(ActivitiesProperty); }
             set { SetValue(ActivitiesProperty, value); }
         }
 
@@ -39,8 +36,8 @@
 
             if (activity != null && !source.Equals(this))
             {
-                Added.Raise(this, activity);
-                dragEventArgs.Effects = DragDropEffects.Move;                
+                dragEventArgs.Effects = DragDropEffects.Move;
+                Added.Raise(this, activity);                
             }
             else
             {
@@ -56,7 +53,7 @@
             dragEventArgs.Handled = true;
         }
 
-        private void ActivityControl_OnMoved(object sender, RoutedEventArgs e)
+        private void OnActivityMoved(object sender, RoutedEventArgs e)
         {
             Removed.Raise(this, ((ActivityControl)e.OriginalSource).Activity);
         }

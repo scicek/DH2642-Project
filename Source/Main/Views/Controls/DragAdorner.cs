@@ -1,4 +1,4 @@
-﻿namespace Main.Views
+﻿namespace Main.Views.Controls
 {
     using System.Windows;
     using System.Windows.Controls;
