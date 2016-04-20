@@ -4,6 +4,7 @@
         <Setter Property="Background" Value="#9BBB59"/>
         <Setter Property="BorderBrush" Value="#71893F"/>
         <Setter Property="BorderThickness" Value="3"/>
+        <Setter Property="FontSize" Value="15"/>
         <Setter Property="Foreground" Value="White"/>
     </Style>
 
@@ -11,6 +12,13 @@
         <Setter Property="Background" Value="#C0504D"/>
         <Setter Property="BorderBrush" Value="#8C3836"/>
         <Setter Property="BorderThickness" Value="3"/>
+        <Setter Property="FontSize" Value="15"/>
         <Setter Property="Foreground" Value="White"/>
+    </Style>
+
+    <Style x:Key="WhiteTextBlock" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="15"/>
     </Style>
 </ResourceDictionary>

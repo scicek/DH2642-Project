@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid Background="Transparent" AllowDrop="True" Drop="OnDrop" DragOver="OnDragOver">
-        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding ElementName=ActivityListCtrl, Path=Activities}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -18,6 +18,10 @@
             </ItemsControl>
         </ScrollViewer>
 
-        <Rectangle Stroke="White" StrokeThickness="2" StrokeDashArray="4 4" RadiusX="5" RadiusY="5" SnapsToDevicePixels="True"/>
+        <Rectangle Stroke="White" StrokeThickness="2" StrokeDashArray="3 3" SnapsToDevicePixels="True"/>
+        <Border HorizontalAlignment="Left" VerticalAlignment="Top" BorderThickness="2, 2, 0, 0" BorderBrush="White" Width="10" Height="10"/>
+        <Border HorizontalAlignment="Right" VerticalAlignment="Top" BorderThickness="0, 2, 2, 0" BorderBrush="White" Width="10" Height="10"/>
+        <Border HorizontalAlignment="Left" VerticalAlignment="Bottom" BorderThickness="2, 0, 0, 2" BorderBrush="White" Width="10" Height="10"/>
+        <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" BorderThickness="0, 0, 2, 2" BorderBrush="White" Width="10" Height="10"/>
     </Grid>
 </UserControl>

@@ -8,12 +8,18 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <converters:ActivityTypeToBackgroundColorConverter x:Key="ActivityTypeToBackgroundColorConverter"/>
+        <ResourceDictionary>
+            <converters:ActivityTypeToBackgroundColorConverter x:Key="ActivityTypeToBackgroundColorConverter"/>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     <DockPanel Background="Transparent" PreviewMouseLeftButtonUp="UIElement_OnPreviewMouseLeftButtonUp">
         <TextBlock DockPanel.Dock="Left" Foreground="White" Margin="10" FontWeight="Bold">
             <TextBlock.Style>
-                <Style TargetType="TextBlock">
+                <Style TargetType="TextBlock" BasedOn="{StaticResource WhiteTextBlock}">
                     <Setter Property="Text" Value="{Binding ElementName=ActivityCtrl, Path=Activity.StartTime}"/>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding ElementName=ActivityCtrl, Path=Activity.StartTime}" Value="{x:Null}">
@@ -26,7 +32,7 @@
         
         <Grid DockPanel.Dock="Left">
             <Rectangle Fill="{Binding ElementName=ActivityCtrl, Path=Activity.Type, Converter={StaticResource ActivityTypeToBackgroundColorConverter}}" Stroke="White" StrokeThickness="2"/>
-            <TextBlock Text="{Binding ElementName=ActivityCtrl, Path=Activity.Name}" Foreground="White" Margin="10" FontWeight="Bold"/>
+            <TextBlock Text="{Binding ElementName=ActivityCtrl, Path=Activity.Name}" Style="{StaticResource WhiteTextBlock}" Margin="10" TextTrimming="CharacterEllipsis"/>
         </Grid>
     </DockPanel>
 </UserControl>

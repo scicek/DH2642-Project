@@ -6,7 +6,7 @@
         xmlns:viewModels="clr-namespace:Main.ViewModels"
         xmlns:controls="clr-namespace:Main.Views.Controls"
         WindowStartupLocation="CenterScreen"
-        Title="Meeting Agenda Builder" Height="560" Width="700" 
+        Title="Meeting Agenda Builder" Height="700" Width="700" 
         x:Name="Main"
         SizeToContent="Width"
         AllowDrop="True"
@@ -24,9 +24,9 @@
     <Grid x:Name="MainGrid" Background="#1E1E1E">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.4*" MinWidth="200"/>
-                <ColumnDefinition Width="0.4*" MinWidth="200"/>
-                <ColumnDefinition Width="0.2*"/>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="140"/>
             </Grid.ColumnDefinitions>
 
             <DockPanel Grid.Column="0" Margin="15">
@@ -50,7 +50,7 @@
                 </ItemsControl>
             </ScrollViewer>
         
-            <Button Grid.Column="2" Content="+ Add a day" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource GreenButton}" Padding="25" FontWeight="Bold" Click="OnAddDay" Margin="0, 0, 10, 0"/>
+            <Button Grid.Column="2" Content="+ Add Day" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource GreenButton}" Padding="25" FontWeight="Bold" Click="OnAddDay" Margin="0, 0, 10, 0"/>
         </Grid>
 
         <Grid x:Name="AddActivityPopup" Visibility="{Binding EditingState.IsEditing, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
@@ -66,7 +66,7 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.ColumnSpan="3" Grid.RowSpan="3" Background="Black" Opacity="0.9"/>
-            <controls:ActivityInformationControl Grid.Row="1" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Activity="{Binding EditingState.Activity}" Save="OnSaveActivity" Cancel="OnCancelActivity"/>
+            <controls:ActivityInformationControl Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" MinWidth="350" MaxWidth="350" Activity="{Binding EditingState.Activity}" Save="OnSaveActivity" Cancel="OnCancelActivity"/>
         </Grid>
 
         <Grid x:Name="AdornerLayer"/>

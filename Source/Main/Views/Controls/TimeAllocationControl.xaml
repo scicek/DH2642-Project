@@ -9,49 +9,50 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <converters:ActivityTypeToBackgroundColorConverter x:Key="ActivityTypeToBackgroundColorConverter"/>
-        <converters:PercentageOfElementHeightToHeightConverter x:Key="PercentageOfElementHeightToHeightConverter"/>
+        <converters:TimeAllocationToWidthConverter x:Key="PercentageOfElementHeightToHeightConverter"/>
+        <converters:MinimumBreakToMarginConverter x:Key="MinimumBreakToMarginConverter"/>
     </UserControl.Resources>
-    
+
     <Grid VerticalAlignment="Bottom">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.15*"/>
-            <ColumnDefinition Width="0.7*"/>
-            <ColumnDefinition Width="0.15*"/>
-        </Grid.ColumnDefinitions>
-        
-        <ItemsControl x:Name="ActivitiesItemControl" Grid.Column="1" ItemsSource="{Binding ElementName=TimeAllocationCtrl, Path=ActivityAllocations}" VerticalAlignment="Bottom">
+        <ItemsControl x:Name="ActivitiesItemControl" ItemsSource="{Binding ElementName=TimeAllocationCtrl, Path=ActivityAllocations}" VerticalAlignment="Bottom" ClipToBounds="True">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid Background="{Binding Key, Converter={StaticResource ActivityTypeToBackgroundColorConverter}}" VerticalAlignment="Bottom">
-                        <Grid.Height>
+                    <Grid Background="{Binding Key, Converter={StaticResource ActivityTypeToBackgroundColorConverter}}" Height="{Binding ElementName=TimeAllocationCtrl, Path=ActualHeight}" Margin="0, 4, 0, 4">
+                        <Grid.Width>
                             <MultiBinding Converter="{StaticResource PercentageOfElementHeightToHeightConverter}">
                                 <Binding Path="Value"/>
-                                <Binding ElementName="TimeAllocationCtrl" Path="Height"/>
+                                <Binding ElementName="TimeAllocationCtrl" Path="ActualWidth"/>
                             </MultiBinding>
-                        </Grid.Height>
+                        </Grid.Width>
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
         </ItemsControl>
         
-        <Border Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="Red" BorderThickness="0, 2, 0, 0" VerticalAlignment="Bottom">
-            <Border.Height>
-                <MultiBinding Converter="{StaticResource PercentageOfElementHeightToHeightConverter}">
+        <Rectangle Width="3" Fill="Red" HorizontalAlignment="Left">
+            <Rectangle.Margin>
+                <MultiBinding Converter="{StaticResource MinimumBreakToMarginConverter}">
                     <Binding ElementName="TimeAllocationCtrl" Path="RequiredBreakPercentage"/>
-                    <Binding ElementName="TimeAllocationCtrl" Path="Height"/>
+                    <Binding ElementName="TimeAllocationCtrl" Path="ActualWidth"/>
                 </MultiBinding>
-            </Border.Height>
-            
-            <Border.Style>
-                <Style TargetType="Border">
-                    <Setter Property="Visibility" Value="Visible"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ElementName=TimeAllocationCtrl, Path=ActivityAllocations.Count}" Value="0">
-                            <Setter Property="Visibility" Value="Hidden"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
-        </Border>        
+            </Rectangle.Margin>
+        </Rectangle>
     </Grid>
+
+    <UserControl.Style>
+        <Style TargetType="UserControl">
+            <Setter Property="Visibility" Value="Visible"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=TimeAllocationCtrl, Path=ActivityAllocations.Count}" Value="0">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Style>
 </UserControl>
+

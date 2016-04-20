@@ -9,52 +9,53 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <Style x:Key="WhiteTextBlock" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
-    <DockPanel Margin="15">
-        <Border Background="Red" BorderBrush="White" BorderThickness="0, 2, 0, 2" DockPanel.Dock="Top" Margin="0, 0, 0, 10">
-            <TextBlock x:Name="HolidayTextBlock" Text="{Binding ElementName=DayCtrl, Path=Holiday}" HorizontalAlignment="Center" Style="{StaticResource WhiteTextBlock}"/>
-            
-            <Border.Style>
-                <Style TargetType="Border">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ElementName=HolidayTextBlock, Path=Text}" Value="{x:Static system:String.Empty}">
-                            <Setter Property="Visibility" Value="Collapsed"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
-        </Border>
+    <Grid Margin="15, 15, 15, 5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
         
-        <Grid DockPanel.Dock="Top">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.7*"/>
-                <ColumnDefinition Width="0.3*"/>
-            </Grid.ColumnDefinitions>
-            
-            <StackPanel Grid.Column="0" Orientation="Vertical">
+        <Grid Grid.Row="0">
+            <StackPanel Orientation="Vertical">                    
                 <TextBlock Style="{StaticResource WhiteTextBlock}">
                     <Run Text="Date: "/>
                     <Run Text="{Binding ElementName=DayCtrl, Path=Day.Date, Mode=OneWay}"/>
+                    <TextBlock>
+                        <Run Text="( " Foreground="White"/><Run x:Name="HolidayText" Text="{Binding ElementName=DayCtrl, Path=Holiday}" Foreground="Red"/><Run Text=" )" Foreground="White"/>
+                        
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource WhiteTextBlock}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=HolidayText, Path=Text}" Value="{x:Static system:String.Empty}">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
                 </TextBlock>
                 
                 <DockPanel Dock="Top">
                     <TextBlock Text="Start time: " Style="{StaticResource WhiteTextBlock}"/>
-                    <TextBox x:Name="StartTimeTextBox" Text="{Binding ElementName=DayCtrl, Path=Day.BeginTime}" BorderBrush="#7F7F7F" BorderThickness="2" PreviewKeyDown="OnPreviewKeyDown"/>
+                    <TextBox x:Name="StartTimeTextBox" Text="{Binding ElementName=DayCtrl, Path=Day.BeginTime}" FontSize="15" MinWidth="65" MaxWidth="65" HorizontalAlignment="Left" BorderBrush="#7F7F7F" BorderThickness="2" PreviewKeyDown="OnPreviewKeyDown"/>
                 </DockPanel>
 
-                <TextBlock Style="{StaticResource WhiteTextBlock}" DockPanel.Dock="Top" Margin="0, 0, 0, 10">
+                <TextBlock Style="{StaticResource WhiteTextBlock}" Margin="0, 0, 0, 10">
                     <Run Text="End time: "/><Run Text="{Binding ElementName=DayCtrl, Path=Day.EndTime, Mode=OneWay}"/><LineBreak/>
                     <Run Text="Total length: "/><Run Text="{Binding ElementName=DayCtrl, Path=Day.TotalLength, Mode=OneWay}"/>
                 </TextBlock>
             </StackPanel>
-
-            <controls:TimeAllocationControl Grid.Column="1" Background="Transparent" ActivityAllocations="{Binding ElementName=DayCtrl, Path=Day.TimeAllocations}" RequiredBreakPercentage="0.3" MinWidth="70" Height="70" VerticalAlignment="Bottom" Margin="10, 0, 0, 10"/>
         </Grid>
-       
-        <controls:ActivityListControl x:Name="ActivityListControl" DockPanel.Dock="Bottom" Activities="{Binding ElementName=DayCtrl, Path=Day.AllActivities}" Added="ActivityListControl_OnAdded" Removed="ActivityListControl_OnRemoved"/>    
-    </DockPanel>
+
+        <controls:ActivityListControl x:Name="ActivityListControl" Grid.Row="1" Activities="{Binding ElementName=DayCtrl, Path=Day.AllActivities}" Added="ActivityListControl_OnAdded" Removed="ActivityListControl_OnRemoved" Width="250"/>
+
+        <controls:TimeAllocationControl Grid.Row="2" Background="Transparent" ActivityAllocations="{Binding ElementName=DayCtrl, Path=Day.TimeAllocations}" Height="25" Margin="0,5,0,0" RequiredBreakPercentage="0.3"/>
+    </Grid>
 </UserControl>

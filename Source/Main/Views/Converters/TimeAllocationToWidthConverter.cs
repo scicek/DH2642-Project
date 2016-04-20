@@ -4,7 +4,7 @@
     using System.Globalization;
     using System.Windows.Data;
 
-    public class PercentageOfElementHeightToHeightConverter : IMultiValueConverter
+    public class TimeAllocationToWidthConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {

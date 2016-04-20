@@ -109,7 +109,8 @@
       <DependentUpon>TimeAllocationControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Converters\ActivityTypeToBackgroundColorConverter.cs" />
-    <Compile Include="Views\Converters\PercentageOfElementHeightToHeightConverter.cs" />
+    <Compile Include="Views\Converters\MinimumBreakToMarginConverter.cs" />
+    <Compile Include="Views\Converters\TimeAllocationToWidthConverter.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>

@@ -30,7 +30,7 @@
             set { SetValue(RequiredBreakPercentageProperty, value); }
         }
 
-        // This is techically not needed as the model returns the allocations in the proper order (i.e. break at the bottom) but for good measure, we coorce the order of the allocations.
+        // Coorce the order of the allocations.
         private static object CoerceValueCallback(DependencyObject dependencyObject, object baseValue)
         {
             var allocations = baseValue as Dictionary<ActivityType, double>;
@@ -39,7 +39,7 @@
 
             var coercedValue = new Dictionary<ActivityType, double>();
 
-            new List<ActivityType> { ActivityType.Presentation, ActivityType.Discussion, ActivityType.GroupWork, ActivityType.Break }.ForEach(activityType =>
+            new List<ActivityType> { ActivityType.Break, ActivityType.GroupWork, ActivityType.Discussion, ActivityType.Presentation }.ForEach(activityType =>
             {
                 if (allocations.ContainsKey(activityType))
                     coercedValue.Add(activityType, allocations[activityType]);
