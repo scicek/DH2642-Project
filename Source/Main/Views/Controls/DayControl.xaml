@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:Main.Views.Controls"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              x:Name="DayCtrl"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -44,7 +45,7 @@
                 
                 <DockPanel Dock="Top">
                     <TextBlock Text="Start time: " Style="{StaticResource WhiteTextBlock}"/>
-                    <TextBox x:Name="StartTimeTextBox" Text="{Binding ElementName=DayCtrl, Path=Day.BeginTime}" FontSize="15" MinWidth="65" MaxWidth="65" HorizontalAlignment="Left" BorderBrush="#7F7F7F" BorderThickness="2" PreviewKeyDown="OnPreviewKeyDown"/>
+                    <xctk:DateTimeUpDown x:Name="StartTime" Format="Custom" FormatString="HH:mm:ss" ValueChanged="OnBeginTimeChanged" Watermark="00:00:00" Kind="Local" DefaultValue="00:00:00" AllowTextInput="True" FontSize="15" HorizontalAlignment="Left" BorderBrush="#7F7F7F" BorderThickness="2"/>
                 </DockPanel>
 
                 <TextBlock Style="{StaticResource WhiteTextBlock}" Margin="0, 0, 0, 10">

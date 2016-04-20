@@ -27,8 +27,6 @@
             };
 
             InitializeComponent();
-
-            LengthTextBox.Text = Activity.Length.ToString();
         }
 
         public event EventHandler Cancel;
@@ -50,7 +48,7 @@
                 return;
 
             control.ActivityNameTextBox.Text = control.Activity != null ? control.Activity.Name : null;
-            control.LengthTextBox.Text = control.Activity != null ? control.Activity.Length.ToString() : null;
+            control.Length.Value = control.Activity != null ? control.Length.DefaultValue + control.Activity.Length : null;
             control.ActivityTypeComboBox.SelectedValue = control.Activity != null ? control.Activity.Type : ActivityType.Presentation;
             control.ActivityDescriptionTextBox.Text = control.Activity != null ? control.Activity.Description : null;
         }
@@ -65,7 +63,7 @@
         private void OnAddActivitySave(object sender, RoutedEventArgs e)
         {
             TimeSpan length;
-            TimeSpan.TryParse(LengthTextBox.Text, out length);
+            TimeSpan.TryParse(Length.Text, out length);
             var name = ActivityNameTextBox.Text;
             var type = (ActivityType)ActivityTypeComboBox.SelectedValue;
             var description = ActivityDescriptionTextBox.Text;
@@ -80,19 +78,19 @@
             }
         }
 
-        private void LengthTextBox_OnPreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
-        {
-            TimeSpan time;
-            if (!TimeSpan.TryParse(LengthTextBox.Text, out time))
-                LengthTextBox.Text = Activity.Length.ToString();
-        }
-
         private void Clear()
         {
             ActivityNameTextBox.Text = null;
-            LengthTextBox.Text = null;
+            Length.Value = null;
             ActivityTypeComboBox.SelectedValue = ActivityType.Presentation;
             ActivityDescriptionTextBox.Text = null;
+        }
+
+        private void OnLengthChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            TimeSpan time;
+            if (!TimeSpan.TryParse(Length.Text, out time))
+                Length.Text = Activity.Length.ToString();
         }
     }
 }

@@ -41,20 +41,6 @@
             Day.RemoveActivity(e);
         }
 
-        private void OnPreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                TimeSpan time;
-                if (TimeSpan.TryParse(StartTimeTextBox.Text, out time))
-                {
-                    Day.BeginTime = time;
-                }
-                else
-                    StartTimeTextBox.Text = Day.BeginTime.ToString();
-            }
-        }
-
         private static async void PropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
             var control = dependencyObject as DayControl;
@@ -73,7 +59,23 @@
                         control.ActivityListControl.Activities = control.Day.AllActivities;
                     }
                 };
+
+                control.StartTime.Value = control.StartTime.DefaultValue + control.Day.BeginTime;
             }
+        }
+
+        private void OnBeginTimeChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (Day == null)
+                return;
+
+            TimeSpan time;
+            if (TimeSpan.TryParse(StartTime.Text, out time))
+            {
+                Day.BeginTime = time;
+            }
+            else
+                StartTime.Text = Day.BeginTime.ToString();
         }
     }
 }

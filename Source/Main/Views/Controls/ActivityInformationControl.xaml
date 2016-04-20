@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              x:Name="ActivityInformationCtrl"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -28,7 +29,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBox x:Name="LengthTextBox" FontSize="15" Grid.Column="0" PreviewLostKeyboardFocus="LengthTextBox_OnPreviewLostKeyboardFocus"/>
+                            <xctk:DateTimeUpDown x:Name="Length" Grid.Column="0" Grid.ColumnSpan="2" Format="Custom" FormatString="HH:mm:ss" ValueChanged="OnLengthChanged" Watermark="00:00:00" FlowDirection="RightToLeft" ButtonSpinnerLocation="Left" Kind="Local" DefaultValue="00:00:00" AllowTextInput="True" FontSize="15" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" BorderBrush="#7F7F7F" BorderThickness="2"/>
                         </Grid>
 
                         <TextBlock Text="Type" Style="{StaticResource WhiteTextBlock}" Margin="0, 10, 0, -5"/>
