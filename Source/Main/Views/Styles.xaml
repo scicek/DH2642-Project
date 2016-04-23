@@ -1,13 +1,14 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <Color x:Key="DarkTodayColor">DarkOrchid</Color>
     <SolidColorBrush x:Key="DarkBrush" Color="#1E1E1E"/>
     <SolidColorBrush x:Key="GreenBrush" Color="#9BBB59"/>
     <SolidColorBrush x:Key="DarkGreenBrush" Color="#71893F"/>
     <SolidColorBrush x:Key="RedBrush" Color="#C0504D"/>
     <SolidColorBrush x:Key="DarkRedBrush" Color="#8C3836"/>
     <SolidColorBrush x:Key="TodayBrush" Color="Orchid"/>
-    <SolidColorBrush x:Key="DarkTodayBrush" Color="DarkOrchid"/>
+    <SolidColorBrush x:Key="DarkTodayBrush" Color="{StaticResource DarkTodayColor}"/>
     <SolidColorBrush x:Key="HolidayBrush" Color="#C0504D"/>
 
     <Style x:Key="GreenButton" TargetType="Button">

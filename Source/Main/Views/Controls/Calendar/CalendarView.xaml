@@ -78,6 +78,8 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid x:Name="CalendarDay" Background="Transparent" MouseLeftButtonDown="CalendarDayOnClicked">
+                                <Rectangle StrokeThickness="0" Fill="{StaticResource DarkTodayBrush}" Visibility="{Binding IsToday, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="0.33*"/>
@@ -126,7 +128,7 @@
                                     </Viewbox>
                                 </Grid>
 
-                                <Rectangle StrokeThickness="3" Stroke="{StaticResource TodayBrush}" Fill="{StaticResource DarkTodayBrush}" Visibility="{Binding IsToday, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <Rectangle StrokeThickness="3" Stroke="{StaticResource TodayBrush}" Fill="Transparent" Visibility="{Binding IsToday, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                                 <Border BorderBrush="Gray" BorderThickness="1" Margin="-1">
                                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="ExtraBold" Text="{Binding Date, Converter={StaticResource DateConverter}, ConverterParameter=day}" FontSize="25" Margin="5,5,5,5" >
