@@ -16,7 +16,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <DockPanel Background="Transparent" PreviewMouseLeftButtonUp="UIElement_OnPreviewMouseLeftButtonUp">
+    <DockPanel Background="Transparent" PreviewMouseLeftButtonUp="UIElement_OnPreviewMouseLeftButtonUp" ToolTip="{Binding ElementName=ActivityCtrl, Path=Activity.Description}">
         <TextBlock DockPanel.Dock="Left" Foreground="White" Margin="10" FontWeight="Bold">
             <TextBlock.Style>
                 <Style TargetType="TextBlock" BasedOn="{StaticResource WhiteTextBlock}">
