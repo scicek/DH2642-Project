@@ -140,6 +140,7 @@
       <DependentUpon>TimeAllocationControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Converters\ActivityTypeToBackgroundColorConverter.cs" />
+    <Compile Include="Views\Converters\BoolToInvertedBoolConverter.cs" />
     <Compile Include="Views\Converters\IsCurrentMonthToVisibilityConverter.cs" />
     <Compile Include="Views\Converters\NotEqualToValueToVisibilityConverter.cs" />
     <Compile Include="Views\Converters\LastItemConverter.cs" />

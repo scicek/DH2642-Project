@@ -6,6 +6,7 @@
         xmlns:viewModels="clr-namespace:Main.ViewModels"
         xmlns:controls="clr-namespace:Main.Views.Controls"
         xmlns:calendar="clr-namespace:Main.Views.Controls.Calendar"
+        xmlns:converters="clr-namespace:Main.Views.Converters"
         WindowStartupLocation="CenterScreen"
         Title="Meeting Agenda Builder" Height="700" Width="700" 
         x:Name="Main"
@@ -15,6 +16,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <converters:BoolToInvertedBoolConverter x:Key="BoolToInvertedBoolConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -116,7 +118,7 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.ColumnSpan="3" Grid.RowSpan="3" Background="Black" Opacity="0.9"/>
-            <controls:ActivityInformationControl Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" MaxWidth="350" Activity="{Binding EditingState.Activity}" Save="OnSaveActivity" Cancel="OnCancelActivity"/>
+            <controls:ActivityInformationControl Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" MaxWidth="350" Activity="{Binding EditingState.Activity}" Save="OnSaveActivity" Cancel="OnCancelActivity" Delete="OnDeleteActivity" Deletable="{Binding EditingState.IsNew, Converter={StaticResource BoolToInvertedBoolConverter}}"/>
         </Grid>
 
         <calendar:CalendarView x:Name="Calendar" Background="{StaticResource DarkBrush}" Days="{Binding Days}" ShowDates="OnShowDays"/>

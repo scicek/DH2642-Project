@@ -14,6 +14,7 @@
     public partial class ActivityInformationControl : UserControl
     {
         public static readonly DependencyProperty ActivityProperty = DependencyProperty.Register("Activity", typeof(Activity), typeof(ActivityInformationControl), new PropertyMetadata(new Activity(), PropertyChangedCallback));
+        public static readonly DependencyProperty DeletableProperty = DependencyProperty.Register("Deletable", typeof(bool), typeof(ActivityInformationControl), new PropertyMetadata(false));
         private readonly Dictionary<ActivityType, string> _activityTypes;
 
         public ActivityInformationControl()
@@ -31,6 +32,8 @@
 
         public event EventHandler Cancel;
 
+        public event EventHandler<Activity> Delete;
+
         public event EventHandler<Activity> Save;
 
         public Dictionary<ActivityType, string> ActivityTypes { get { return _activityTypes; } }
@@ -39,6 +42,12 @@
         {
             get { return (Activity)GetValue(ActivityProperty); }
             set { SetValue(ActivityProperty, value); }
+        }
+
+        public bool Deletable
+        {
+            get { return (bool)GetValue(DeletableProperty); }
+            set { SetValue(DeletableProperty, value); }
         }
 
         private static void PropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
@@ -91,6 +100,11 @@
             TimeSpan time;
             if (!TimeSpan.TryParse(Length.Text, out time))
                 Length.Text = Activity.Length.ToString();
+        }
+
+        private void OnDelete(object sender, RoutedEventArgs e)
+        {
+            Delete.Raise(this, Activity);
         }
     }
 }

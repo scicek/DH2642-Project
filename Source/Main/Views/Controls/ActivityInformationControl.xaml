@@ -9,6 +9,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -44,6 +45,8 @@
                         </StackPanel>
 
                         <Label x:Name="ErrorText" Content="Invalid data!" Foreground="Red" HorizontalAlignment="Center" Margin="0, 10, 0, 0" Visibility="Hidden"/>
+
+                        <Button Content="Delete" Style="{StaticResource RedButton}" Padding="5" Click="OnDelete" Margin="0, -5, 0, 0" Visibility="{Binding ElementName=ActivityInformationCtrl, Path=Deletable, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     </StackPanel>
                 </Grid>
             </Border>

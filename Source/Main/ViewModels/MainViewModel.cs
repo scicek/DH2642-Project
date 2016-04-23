@@ -86,16 +86,20 @@
         {
             _parkingLot.RemoveActivity(activity);
         }
-        
+
         /// <summary>
         /// Displays the edit dialog.
         /// </summary>
         /// <param name="activity">The activity to edit (leave as null to create a new one).</param>
         /// <param name="isNew">Whether or not the activity is new.</param>
-        public void DisplayEditActivityDialog(Activity activity = null, bool isNew = true)
+        /// <param name="isParked">Whether or not the activity is parked.</param>
+        /// <param name="day">The day of the activity to edit.</param>
+        public void DisplayEditActivityDialog(Activity activity = null, bool isNew = true, bool isParked = false, Day day = null)
         {
             EditingState.IsEditing = true;
             EditingState.IsNew = isNew;
+            EditingState.IsParked = isParked;
+            EditingState.Day = day;
             EditingState.Activity = activity ?? new Activity();
         }
 
@@ -106,6 +110,7 @@
         {
             EditingState.IsEditing = false;
             EditingState.IsNew = true;
+            EditingState.Day = null;
             EditingState.Activity = new Activity();
         }
 
@@ -124,6 +129,20 @@
             // If it's new, add it to the parking lot.
             if (EditingState.IsNew)
                 _parkingLot.AddActivity(EditingState.Activity);
+
+            HideEditActivityDialog();
+        }
+
+        /// <summary>
+        /// Deletes the given activity.
+        /// </summary>
+        /// <param name="activity">The activity to save.</param>
+        public void DeleteActivity(Activity activity)
+        {
+            if (EditingState.Day != null)
+                EditingState.Day.RemoveActivity(activity);
+            else if (EditingState.IsParked)
+                _parkingLot.RemoveActivity(activity);
 
             HideEditActivityDialog();
         }
@@ -239,6 +258,9 @@
         {
             private bool _isEditing;
             private Activity _activity;
+            private bool _isNew;
+            private Day _day;
+            private bool _isParked;
 
             public ActivityEditingState()
             {
@@ -261,7 +283,32 @@
             /// <summary>
             /// Whether or not the activity is new.
             /// </summary>
-            public bool IsNew { get; set; }
+            public bool IsNew
+            {
+                get { return _isNew; }
+                set
+                {
+                    _isNew = value; 
+                    NotifyPropertyChanged();
+                }
+            }
+
+            /// <summary>
+            /// Whether or not the activity is parked.
+            /// </summary>
+            public bool IsParked
+            {
+                get { return _isParked; }
+                set
+                {
+                    _isParked = value;
+                    
+                    if (_isParked)
+                        Day = null;
+                    
+                    NotifyPropertyChanged();
+                }
+            }
 
             /// <summary>
             /// The activity being edited.
@@ -271,7 +318,24 @@
                 get { return _activity; }
                 set
                 {
-                    _activity = value; 
+                    _activity = value;
+                    NotifyPropertyChanged();
+                }
+            }
+
+            /// <summary>
+            /// The day of the activity being edited.
+            /// </summary>
+            public Day Day
+            {
+                get { return _day; }
+                set
+                {
+                    _day = value;
+                    
+                    if (_day != null)
+                        IsParked = false;
+
                     NotifyPropertyChanged();
                 }
             }

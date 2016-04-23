@@ -32,21 +32,27 @@
         }
 
         // Add a parked activity.
-        private void OnParkedActivityAdded(object sender, Activity e)
+        private void OnParkedActivityAdded(object sender, Activity activity)
         {
-            _mainViewModel.AddParkedActivity(e);
+            _mainViewModel.AddParkedActivity(activity);
         }
 
         // Remove a parked activity.
-        private void OnParkedActivityRemoved(object sender, Activity e)
+        private void OnParkedActivityRemoved(object sender, Activity activity)
         {
-            _mainViewModel.RemoveParkedActivity(e);
+            _mainViewModel.RemoveParkedActivity(activity);
         }
 
         // Save changes to an activity.
         private void OnSaveActivity(object sender, Activity activity)
         {
             _mainViewModel.SaveActivity(activity);
+        }
+
+        // Delete an activity.
+        private void OnDeleteActivity(object sender, Activity activity)
+        {
+            _mainViewModel.DeleteActivity(activity);
         }
 
         // Cancel any changes to an activity.
@@ -62,11 +68,23 @@
             if (activityControl == null)
                 return;
 
-            _mainViewModel.DisplayEditActivityDialog(activityControl.Activity, false);
+            // If the sender is the day control the we're editing an activity belonging to a day.
+            Day day = null;
+            var dayControl = sender as DayControl;
+            if (dayControl != null)
+                day = dayControl.Day;
+
+            // If the sender is simply an activity list control then we're editing a parked activity.
+            var isParked = false;
+            var activityListControl = sender as ActivityListControl;
+            if (activityListControl != null)
+                isParked = true;
+
+            _mainViewModel.DisplayEditActivityDialog(activityControl.Activity, false, isParked, day);
         }
 
         // An activity was added to a day.
-        private void OnActivityAddedToDay(object sender, Activity e)
+        private void OnActivityAddedToDay(object sender, Activity activity)
         {
             var dayControl = sender as DayControl;
             if (dayControl == null)
@@ -76,13 +94,13 @@
             if (day == null)
                 return;
 
-            _mainViewModel.AddActivityToDay(day, e);
+            _mainViewModel.AddActivityToDay(day, activity);
             Calendar.Days = null;
             Calendar.Days = _mainViewModel.Days;
         }
 
         // An activity was removed from a day.
-        private void OnActivityRemovedFromDay(object sender, Activity e)
+        private void OnActivityRemovedFromDay(object sender, Activity activity)
         {
             var dayControl = sender as DayControl;
             if (dayControl == null)
@@ -92,7 +110,7 @@
             if (day == null)
                 return;
 
-            _mainViewModel.RemoveActivityToDay(day, e);
+            _mainViewModel.RemoveActivityToDay(day, activity);
             Calendar.Days = null;
             Calendar.Days = _mainViewModel.Days;
         }
@@ -124,9 +142,9 @@
             Calendar.Visibility = Visibility.Visible;
 
             // A little bit of code to make sure that the calendar displays the month containing the current week.
-            var lastDay = _mainViewModel.Days.LastOrDefault();
-            if (lastDay != null)
-                Calendar.SelectedMonth = lastDay.Date.Month;
+            var firstDay = _mainViewModel.Days.FirstOrDefault();
+            if (firstDay != null)
+                Calendar.SelectedMonth = firstDay.Date.Month;
         }
 
         // hide/Show the parking lot.
