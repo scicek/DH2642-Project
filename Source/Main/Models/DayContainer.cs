@@ -53,7 +53,7 @@
             var lastDay = Days.LastOrDefault();
             Date lastDate;
 
-            if (lastDay == null || lastDay.Date < Date.Today())
+            if (lastDay == null || lastDay.Date < Date.Today)
             {
                 var today = DateTime.Now;
                 lastDate = new Date(today.Year, today.Month, today.Day);

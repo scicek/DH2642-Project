@@ -1,7 +1,6 @@
 ﻿namespace Main
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
@@ -49,30 +48,26 @@
             var daysAsJson = response.ResultAs<JArray>();
             var days = new List<Day>();
 
+            // Parse the JSON for the stored days and re-create the days before adding them.
             if (daysAsJson != null && daysAsJson.Any())
             {
                 foreach (var dayAsJson in daysAsJson)
                 {
+                    // Parse the fields of the day.
                     var date = dayAsJson["Date"].ToObject<Date>();
                     var beginTime= dayAsJson["BeginTime"].ToObject<TimeSpan>();
 
+                    // Parse the activities of the day and add them.
                     IEnumerable<Activity> allActivities = null;
                     var activitiesToken = dayAsJson["AllActivities"];
                     if (activitiesToken != null)
                         allActivities = activitiesToken.ToObject<IEnumerable<Activity>>();
 
-                    var day = new Day(date)
-                    {
-                        BeginTime = beginTime,
-                    };
+                    var day = new Day(date) { BeginTime = beginTime };
 
                     if (allActivities != null)
-                    {
                         foreach (var activity in allActivities)
-                        {
                             day.AddActivity(activity);
-                        }
-                    }
 
                     days.Add(day);
                 }

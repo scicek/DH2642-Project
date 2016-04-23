@@ -112,6 +112,7 @@
     <Compile Include="Models\Extensions\DateExtensions.cs" />
     <Compile Include="Models\Extensions\EventExtensions.cs" />
     <Compile Include="Models\DayContainer.cs" />
+    <Compile Include="Models\Month.cs" />
     <Compile Include="Models\NotifyBase.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Utilities.cs" />
@@ -125,6 +126,12 @@
     <Compile Include="Views\Controls\ActivityListControl.xaml.cs">
       <DependentUpon>ActivityListControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\Calendar\CalendarControl.cs" />
+    <Compile Include="Views\Controls\Calendar\CalendarView.xaml.cs">
+      <DependentUpon>CalendarView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Calendar\CalendarDay.cs" />
+    <Compile Include="Views\Controls\Calendar\DayChangedEventArgs.cs" />
     <Compile Include="Views\Controls\DayControl.xaml.cs">
       <DependentUpon>DayControl.xaml</DependentUpon>
     </Compile>
@@ -133,8 +140,13 @@
       <DependentUpon>TimeAllocationControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Converters\ActivityTypeToBackgroundColorConverter.cs" />
+    <Compile Include="Views\Converters\IsCurrentMonthToVisibilityConverter.cs" />
+    <Compile Include="Views\Converters\NotEqualToValueToVisibilityConverter.cs" />
+    <Compile Include="Views\Converters\LastItemConverter.cs" />
+    <Compile Include="Views\Converters\DateConverter.cs" />
+    <Compile Include="Views\Converters\DateToDayConverter.cs" />
     <Compile Include="Views\Converters\MinimumBreakToMarginConverter.cs" />
-    <Compile Include="Views\Converters\TimeAllocationToWidthConverter.cs" />
+    <Compile Include="Views\Converters\ValueMultiplierConverter.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -153,6 +165,10 @@
     <Page Include="Views\Controls\ActivityListControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\Calendar\CalendarView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Controls\DayControl.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -202,6 +218,7 @@
   <ItemGroup>
     <SplashScreen Include="Resources\SplashScreen.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">

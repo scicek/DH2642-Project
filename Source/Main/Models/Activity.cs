@@ -38,7 +38,12 @@
         public TimeSpan? StartTime
         {
             get { return _startTime; }
-            set { _startTime = value; NotifyPropertyChanged(); }
+            set
+            {
+                _startTime = value; 
+                NotifyPropertyChanged();
+                NotifyPropertyChanged("EndTime");
+            }
         }
 
         /// <summary>
@@ -47,7 +52,26 @@
         public TimeSpan Length
         {
             get { return _length; }
-            set { _length = value; NotifyPropertyChanged(); }
+            set 
+            { 
+                _length = value; 
+                NotifyPropertyChanged();
+                NotifyPropertyChanged("EndTime");
+            }
+        }
+
+        /// <summary>
+        /// The end time of the activity.
+        /// </summary>
+        public TimeSpan? EndTime
+        {
+            get
+            {
+                if (_startTime == null)
+                    return null;
+
+                return _startTime.Value + Length;
+            }
         }
 
         /// <summary>

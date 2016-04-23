@@ -106,40 +106,6 @@
             RecalculateActivityStartTimes();
         }
 
-        public async Task<string> GetHoliday()
-        {
-            try
-            {
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("http://holidayapi.com/");
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                    var response = await client.GetAsync("v1/holidays?country=US&year=" + Date.Year + "&month=" + Date.Month + "&day=" + Date.Day).ConfigureAwait(false);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var results = await response.Content.ReadAsStringAsync();
-                        dynamic parsedResults = JObject.Parse(results);
-
-                        var holidays = parsedResults.holidays as JArray;
-                        if (holidays == null || !holidays.Any())
-                            return string.Empty;
-
-                        return holidays.First["name"].ToString();
-                    }
-
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return null;
-            }
-        }
-
         public int CompareTo(Day other)
         {
             if (Date < other.Date)

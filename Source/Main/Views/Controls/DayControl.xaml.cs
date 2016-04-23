@@ -3,8 +3,8 @@
     using System;
     using System.Windows;
     using System.Windows.Controls;
-    using System.Windows.Input;
     using Models;
+    using Models.Extensions;
 
     /// <summary>
     /// Interaction logic for DayControl.xaml
@@ -18,6 +18,9 @@
         {
             InitializeComponent();
         }
+
+        public event EventHandler<Activity> ActivityAdded;
+        public event EventHandler<Activity> ActivityRemoved;
 
         public Day Day
         {
@@ -33,12 +36,12 @@
 
         private void ActivityListControl_OnAdded(object sender, Activity e)
         {
-            Day.AddActivity(e);
+            ActivityAdded.Raise(this, e);
         }
 
         private void ActivityListControl_OnRemoved(object sender, Activity e)
         {
-            Day.RemoveActivity(e);
+            ActivityRemoved.Raise(this, e);
         }
 
         private static async void PropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
@@ -49,12 +52,13 @@
 
             if (control.Day != null)
             {
-                control.Holiday = await control.Day.GetHoliday();
+                control.Holiday = await control.Day.Date.GetHoliday();
 
                 control.Day.PropertyChanged += (sender, args) =>
                 {
                     if (args.PropertyName == Utilities.GetPropertyName(() => control.Day.AllActivities))
                     {
+                        // Force the binding to update.
                         control.ActivityListControl.Activities = null;
                         control.ActivityListControl.Activities = control.Day.AllActivities;
                     }
@@ -71,9 +75,7 @@
 
             TimeSpan time;
             if (TimeSpan.TryParse(StartTime.Text, out time))
-            {
                 Day.BeginTime = time;
-            }
             else
                 StartTime.Text = Day.BeginTime.ToString();
         }

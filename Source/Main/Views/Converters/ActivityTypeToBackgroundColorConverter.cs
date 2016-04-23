@@ -6,6 +6,7 @@
     using System.Windows.Media;
     using Models;
 
+    // Gets a color representing an activity type.
     public class ActivityTypeToBackgroundColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

@@ -16,7 +16,7 @@
     </UserControl.Resources>
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <StackPanel>
-            <Border Background="#1E1E1E" BorderBrush="White" BorderThickness="2" CornerRadius="8">
+            <Border Background="{StaticResource DarkBrush}" BorderBrush="White" BorderThickness="2" CornerRadius="8">
                 <Grid Margin="10">
                     <StackPanel Orientation="Vertical">
                         <TextBlock Text="Name" Style="{StaticResource WhiteTextBlock}"/>

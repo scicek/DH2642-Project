@@ -1,0 +1,223 @@
+﻿<UserControl x:Class="Main.Views.Controls.Calendar.CalendarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:Main.Views.Converters"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             x:Name="CalendarCtrl"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:DateConverter x:Key="DateConverter"/>
+            <converters:DateToDayConverter x:Key="DateTimeToDayConverter"/>
+            <converters:ValueMultiplierConverter x:Key="ValueMultiplierConverter"/>
+            <converters:LastItemConverter x:Key="LastItemConverter"/>
+            <converters:IsCurrentMonthToVisibilityConverter x:Key="IsCurrentMonthToVisibilityConverter"/>
+            <converters:NotEqualToValueToVisibilityConverter x:Key="NotEqualToValueToVisibilityConverter"/>
+            <converters:ActivityTypeToBackgroundColorConverter x:Key="ActivityTypeToBackgroundColorConverter"/>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid  Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Background="{StaticResource DarkBrush}" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid x:Name="Previous" Grid.Column="0" MouseLeftButtonUp="PreviousMonthOrYearOnClick" Style="{StaticResource CalendarControl}" HorizontalAlignment="Right" Margin="0, 0, 10, 0" Width="70">
+                <TextBlock Text="&lt;" Style="{StaticResource WhiteTextBlock}" HorizontalAlignment="Center" Padding="10" FontSize="25"/>
+            </Grid>
+
+            <Grid Grid.Column="1" MouseLeftButtonUp="OnSelectMonthOrYearClicked" Style="{StaticResource CalendarControl}">
+                <TextBlock x:Name="SelectedMonthText" FontSize="25" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource WhiteTextBlock}">
+                    <Run Text="{Binding ElementName=CalendarCtrl, Path=SelectedMonthName}"/><Run Text=" "/><Run Text="{Binding ElementName=CalendarCtrl, Path=SelectedYear}"/>
+                </TextBlock>
+                <TextBlock x:Name="SelectedYearText" Text="{Binding ElementName=CalendarCtrl, Path=SelectedYear}" FontSize="25" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{StaticResource WhiteTextBlock}"/>
+            </Grid>
+
+            <Grid x:Name="Next" Grid.Column="2" MouseLeftButtonUp="NextMonthOrYearOnClick" Style="{StaticResource CalendarControl}" HorizontalAlignment="Left" Margin="10, 0, 0, 0" Width="70">
+                <TextBlock Text="&gt;" Style="{StaticResource WhiteTextBlock}" HorizontalAlignment="Center" Padding="10" FontSize="25"/>
+            </Grid>
+        </Grid>
+        
+        <Grid Grid.Row="1" Background="{StaticResource DarkBrush}">
+            <Grid x:Name="CalendarDaysGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <ItemsControl Grid.Row="0" ItemsSource="{Binding ElementName=CalendarCtrl, Path=CalendarDayNames}" DockPanel.Dock="Top" Margin="0, 0, 0, 5">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock TextAlignment="Center" Text="{Binding }" FontSize="18" Style="{StaticResource WhiteTextBlock}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Rows="1" Columns="7" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding ElementName=CalendarCtrl, Path=CalendarDays}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid x:Name="CalendarDay" Background="Transparent" MouseLeftButtonDown="CalendarDayOnClicked">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="0.33*"/>
+                                        <RowDefinition Height="0.33*"/>
+                                        <RowDefinition Height="0.33*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.DataContext>
+                                        <MultiBinding Converter="{StaticResource DateTimeToDayConverter}">
+                                            <Binding ElementName="CalendarCtrl" Path="DateTimeToDaysMapping"/>
+                                            <Binding Path="Date"/>
+                                        </MultiBinding>
+                                    </Grid.DataContext>
+                                    
+                                    <ItemsControl Grid.Row="0" Grid.RowSpan="3" x:Name="ActivitiesItemControl" ItemsSource="{Binding TimeAllocations}" VerticalAlignment="Bottom" ClipToBounds="True">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Background="{Binding Key, Converter={StaticResource ActivityTypeToBackgroundColorConverter}}">
+                                                    <Grid.Height>
+                                                        <MultiBinding Converter="{StaticResource ValueMultiplierConverter}">
+                                                            <Binding Path="Value"/>
+                                                            <Binding ElementName="CalendarDay" Path="ActualHeight"/>
+                                                        </MultiBinding>
+                                                    </Grid.Height>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Vertical"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+
+                                    <Viewbox Grid.Row="0">
+                                        <StackPanel Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0, 3, 0, 0" Visibility="{Binding ElementName=StartTime, Path=Text, Converter={StaticResource NotEqualToValueToVisibilityConverter}, ConverterParameter={x:Static system:String.Empty}}">
+                                            <TextBlock Text="From:" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                                            <TextBlock x:Name="StartTime" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="White" FontWeight="Bold" Text="{Binding AllActivities[0].StartTime}"/>
+                                        </StackPanel>
+                                    </Viewbox>
+
+                                    <Viewbox Grid.Row="2" >
+                                        <StackPanel Orientation="Vertical" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0, 0, 0, 3" Visibility="{Binding ElementName=EndTime, Path=Text, Converter={StaticResource NotEqualToValueToVisibilityConverter}, ConverterParameter={x:Static system:String.Empty}}">
+                                            <TextBlock Text="To:" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                                            <TextBlock x:Name="EndTime" HorizontalAlignment="Center" VerticalAlignment="Bottom" Foreground="White" FontWeight="Bold" DataContext="{Binding AllActivities, Converter={StaticResource LastItemConverter}}" Text="{Binding EndTime, Mode=OneWay}"/>
+                                        </StackPanel>
+                                    </Viewbox>
+                                </Grid>
+
+                                <Rectangle StrokeThickness="3" Stroke="{StaticResource TodayBrush}" Fill="{StaticResource DarkTodayBrush}" Visibility="{Binding IsToday, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                                <Border BorderBrush="Gray" BorderThickness="1" Margin="-1">
+                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="ExtraBold" Text="{Binding Date, Converter={StaticResource DateConverter}, ConverterParameter=day}" FontSize="25" Margin="5,5,5,5" >
+                                        <TextBlock.Style>
+                                            <Style TargetType="{x:Type TextBlock}">
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsTargetMonth}" Value="false">
+                                                        <Setter Property="TextBlock.Foreground" Value="SlateGray"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </Border>
+
+                                <Rectangle x:Name="Highlight" Stroke="White">
+                                    <Rectangle.Style>
+                                        <Style TargetType="Rectangle">
+                                            <Setter Property="StrokeThickness" Value="0"/>
+                                            <Setter Property="Fill" Value="Transparent"/>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="StrokeThickness" Value="3"/>
+                                                    <Setter Property="Fill">
+                                                        <Setter.Value>
+                                                            <SolidColorBrush Color="White" Opacity="0.2"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Rectangle.Style>
+                                </Rectangle>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Rows="6" Columns="7" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </Grid>
+            
+            <Grid x:Name="CalendarMonthGrid" Background="{StaticResource DarkBrush}" VerticalAlignment="Stretch">
+                <ItemsControl ItemsSource="{Binding ElementName=CalendarCtrl, Path=Months}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Background="Transparent" MouseLeftButtonUp="OnMonthClicked" Tag="{Binding Key}">
+                                <Rectangle StrokeThickness="1" Margin="-1" Stroke="Gray" />
+                                <Rectangle StrokeThickness="3" Stroke="{StaticResource TodayBrush}" Fill="{StaticResource DarkTodayBrush}">
+                                    <Rectangle.Visibility>
+                                        <MultiBinding Converter="{StaticResource IsCurrentMonthToVisibilityConverter}">
+                                            <Binding Path="Key"/>
+                                            <Binding ElementName="CalendarCtrl" Path="SelectedYear"/>
+                                        </MultiBinding>
+                                    </Rectangle.Visibility>
+                                </Rectangle>
+
+                                <Rectangle x:Name="Highlight" Stroke="White">
+                                    <Rectangle.Style>
+                                        <Style TargetType="Rectangle">
+                                            <Setter Property="StrokeThickness" Value="0"/>
+                                            <Setter Property="Fill" Value="Transparent"/>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="StrokeThickness" Value="3"/>
+                                                    <Setter Property="Fill">
+                                                        <Setter.Value>
+                                                            <SolidColorBrush Color="White" Opacity="0.2"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Rectangle.Style>
+                                </Rectangle>
+
+                                <TextBlock FontSize="20" Text="{Binding Value}" Style="{StaticResource WhiteTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Rows="4" Columns="4" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

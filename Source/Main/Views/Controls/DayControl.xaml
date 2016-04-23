@@ -11,6 +11,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -19,44 +20,53 @@
     <Grid Margin="15, 15, 15, 5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
         <Grid Grid.Row="0">
-            <StackPanel Orientation="Vertical">                    
+            <StackPanel Orientation="Vertical">
+                <Grid Background="{StaticResource DarkTodayBrush}" Height="5" Visibility="{Binding ElementName=DayCtrl, Path=Day.Date.IsToday, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0, -5, 0, 0"/>
+                
                 <TextBlock Style="{StaticResource WhiteTextBlock}">
                     <Run Text="Date: "/>
                     <Run Text="{Binding ElementName=DayCtrl, Path=Day.Date, Mode=OneWay}"/>
-                    <TextBlock>
-                        <Run Text="( " Foreground="White"/><Run x:Name="HolidayText" Text="{Binding ElementName=DayCtrl, Path=Holiday}" Foreground="Red"/><Run Text=" )" Foreground="White"/>
-                        
-                        <TextBlock.Style>
-                            <Style TargetType="TextBlock" BasedOn="{StaticResource WhiteTextBlock}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=HolidayText, Path=Text}" Value="{x:Static system:String.Empty}">
-                                        <Setter Property="Visibility" Value="Hidden"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
                 </TextBlock>
                 
-                <DockPanel Dock="Top">
+                <DockPanel Dock="Top" Margin="0, 5, 0, 5">
                     <TextBlock Text="Start time: " Style="{StaticResource WhiteTextBlock}"/>
                     <xctk:DateTimeUpDown x:Name="StartTime" Format="Custom" FormatString="HH:mm:ss" ValueChanged="OnBeginTimeChanged" Watermark="00:00:00" Kind="Local" DefaultValue="00:00:00" AllowTextInput="True" FontSize="15" HorizontalAlignment="Left" BorderBrush="#7F7F7F" BorderThickness="2"/>
                 </DockPanel>
 
-                <TextBlock Style="{StaticResource WhiteTextBlock}" Margin="0, 0, 0, 10">
-                    <Run Text="End time: "/><Run Text="{Binding ElementName=DayCtrl, Path=Day.EndTime, Mode=OneWay}"/><LineBreak/>
+                <TextBlock Style="{StaticResource WhiteTextBlock}">
+                    <Run Text="End time: "/><Run Text="{Binding ElementName=DayCtrl, Path=Day.EndTime, Mode=OneWay}"/>
+                </TextBlock>
+
+                <TextBlock Style="{StaticResource WhiteTextBlock}" Margin="0, 5, 0, 0">
                     <Run Text="Total length: "/><Run Text="{Binding ElementName=DayCtrl, Path=Day.TotalLength, Mode=OneWay}"/>
                 </TextBlock>
             </StackPanel>
         </Grid>
 
-        <controls:ActivityListControl x:Name="ActivityListControl" Grid.Row="1" Activities="{Binding ElementName=DayCtrl, Path=Day.AllActivities}" Added="ActivityListControl_OnAdded" Removed="ActivityListControl_OnRemoved" Width="250"/>
+        <Grid Grid.Row="1" Margin="0, 10, 0, 10">
+            <Border Background="{StaticResource HolidayBrush}" BorderBrush="White" BorderThickness="0, 3, 0, 3"/>
+            <TextBlock TextTrimming="CharacterEllipsis" MaxWidth="250" Margin="0, 2, 0, 2" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource WhiteTextBlock}">
+                <Run x:Name="HolidayText" Text="{Binding ElementName=DayCtrl, Path=Holiday}" />
+            </TextBlock>
 
-        <controls:TimeAllocationControl Grid.Row="2" Background="Transparent" ActivityAllocations="{Binding ElementName=DayCtrl, Path=Day.TimeAllocations}" Height="25" Margin="0,5,0,0" RequiredBreakPercentage="0.3"/>
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=HolidayText, Path=Text}" Value="{x:Static system:String.Empty}">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+        </Grid>
+
+        <controls:ActivityListControl x:Name="ActivityListControl" Grid.Row="2" Activities="{Binding ElementName=DayCtrl, Path=Day.AllActivities}" Added="ActivityListControl_OnAdded" Removed="ActivityListControl_OnRemoved" MaxWidth="250"/>
+        <controls:TimeAllocationControl Grid.Row="3" Background="Transparent" ActivityAllocations="{Binding ElementName=DayCtrl, Path=Day.TimeAllocations}" Height="25" Margin="0,5,0,0" RequiredBreakPercentage="0.3"/>
     </Grid>
 </UserControl>

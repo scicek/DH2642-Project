@@ -6,6 +6,7 @@
     using System.Runtime.CompilerServices;
     using Annotations;
 
+    // Wraps the property changed implementation.
     public class NotifyBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;

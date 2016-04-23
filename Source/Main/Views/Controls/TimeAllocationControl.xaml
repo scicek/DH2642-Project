@@ -9,7 +9,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <converters:ActivityTypeToBackgroundColorConverter x:Key="ActivityTypeToBackgroundColorConverter"/>
-        <converters:TimeAllocationToWidthConverter x:Key="PercentageOfElementHeightToHeightConverter"/>
+        <converters:ValueMultiplierConverter x:Key="ValueMultiplierConverter"/>
         <converters:MinimumBreakToMarginConverter x:Key="MinimumBreakToMarginConverter"/>
     </UserControl.Resources>
 
@@ -19,7 +19,7 @@
                 <DataTemplate>
                     <Grid Background="{Binding Key, Converter={StaticResource ActivityTypeToBackgroundColorConverter}}" Height="{Binding ElementName=TimeAllocationCtrl, Path=ActualHeight}" Margin="0, 4, 0, 4">
                         <Grid.Width>
-                            <MultiBinding Converter="{StaticResource PercentageOfElementHeightToHeightConverter}">
+                            <MultiBinding Converter="{StaticResource ValueMultiplierConverter}">
                                 <Binding Path="Value"/>
                                 <Binding ElementName="TimeAllocationCtrl" Path="ActualWidth"/>
                             </MultiBinding>
